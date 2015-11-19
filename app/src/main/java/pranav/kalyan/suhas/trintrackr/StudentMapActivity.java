@@ -1,9 +1,12 @@
 package pranav.kalyan.suhas.trintrackr;
 
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,13 +17,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 public class StudentMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LatLng home = new LatLng(41.747270, -72.690354);
-    private Button mCallShuttleButton;
+    private Button mCall;
     private Button mCancel;
     private Marker mStudent;
+    private Button mStartShuttle;
+    private Button mStopShuttle;
+    private TextView mMessage;
+    private int mInterval = 1000; // 1 seconds by default, can be changed later
+    private int mTest = 1000;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +40,12 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.studentMap);
         mapFragment.getMapAsync(this);
+
+        mMessage = (TextView) findViewById(R.id.student_message_board);
+        mMessage.setText(R.string.no_shuttle);
+
+        mHandler = new Handler();
+        //startRepeatingTask();
     }
 
 
@@ -54,26 +70,77 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
 
 
-        mCallShuttleButton = (Button) findViewById(R.id.call_shuttle);
-        mCallShuttleButton.setOnClickListener(new View.OnClickListener() {
+        mCall = (Button) findViewById(R.id.student_call_shuttle);
+        mCall.setEnabled(false);
+        mCancel = (Button) findViewById(R.id.student_cancel_shuttle);
+        mCancel.setEnabled(false);
+        mStartShuttle = (Button) findViewById(R.id.student_start_shuttle);
+        mStopShuttle = (Button) findViewById(R.id.student_stop_shuttle);
+        mStopShuttle.setEnabled(false);
+
+        mStartShuttle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStudent.setDraggable(true);
+                mCancel.setEnabled(false);
+                mCall.setEnabled(true);
+                mStopShuttle.setEnabled(true);
+                mStartShuttle.setEnabled(false);
+                mMessage.setText(R.string.yes_shuttle);
+            }
+        });
+
+
+        mStopShuttle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStudent.setDraggable(true);
+                mCancel.setEnabled(false);
+                mCall.setEnabled(false);
+                mStartShuttle.setEnabled(true);
+                mStopShuttle.setEnabled(false);
+                mMessage.setText(R.string.no_shuttle);
+            }
+        });
+
+
+        mCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mStudent.setDraggable(false);
                 mCancel.setEnabled(true);
-                mCallShuttleButton.setEnabled(false);
+                mCall.setEnabled(false);
+                mMessage.setText(R.string.shuttle_called);
             }
         });
 
 
-        mCancel = (Button) findViewById(R.id.cancel_shuttle);
-        mCancel.setEnabled(false);
+
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mStudent.setDraggable(true);
-                mCallShuttleButton.setEnabled(true);
+                mCall.setEnabled(true);
                 mCancel.setEnabled(false);
+                mMessage.setText(R.string.shuttle_cancel);
             }
         });
+    }
+
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            mTest  -= 1;
+            mMessage.setText(String.valueOf(mTest));
+            mHandler.postDelayed(mStatusChecker, mInterval);
+        }
+    };
+
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
     }
 }

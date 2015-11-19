@@ -6,20 +6,39 @@
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
+              xmlns:map="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
               android:layout_height="wrap_content" android:id="@+id/studentMap"
               tools:context="pranav.kalyan.suhas.trintrackr.StudentMapActivity"
               android:name="com.google.android.gms.maps.SupportMapFragment"
-              android:layout_weight="80"/>
+              android:layout_weight="50"/>
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="10">
+        android:layout_weight="1"
+        android:paddingBottom="40px"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/student_message_board"
+            android:textAlignment="center"
+            android:textSize="30sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
         <Button
-            android:id="@+id/call_shuttle"
+            android:id="@+id/student_call_shuttle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/call_shuttle"
@@ -28,10 +47,32 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cancel_shuttle"
+            android:id="@+id/student_cancel_shuttle"
             android:text="@string/cancel_shuttle"
             android:layout_weight="1"/>
 
     </LinearLayout>
 
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
+        <Button
+            android:id="@+id/student_start_shuttle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DEMO: Start Shuttle"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/student_stop_shuttle"
+            android:text="DEMO: Stop Shuttle"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 </LinearLayout>
