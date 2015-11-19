@@ -78,7 +78,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
                 if (suser.equals("Pra") && spass.equals("nav")) {
                     ((TextView) findViewById(R.id.studentLoginMessage)).setText("");
-                    Intent i = new Intent(WelcomeScreenActivity.this, DriverMapActivity.class);
+                    Intent i = new Intent(WelcomeScreenActivity.this, StudentMapActivity.class);
                     startActivity(i);
                 } else {
                     ((TextView) findViewById(R.id.studentLoginMessage)).setText("Invalid Credentials!");
@@ -95,7 +95,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
                 if (duser.equals("Kal") && dpass.equals("yan")) {
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
-                    Intent i = new Intent(WelcomeScreenActivity.this, StudentMapActivity.class);
+                    Intent i = new Intent(WelcomeScreenActivity.this, DriverMapActivity.class);
                     startActivity(i);
                 } else {
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("Invalid Credentials!");

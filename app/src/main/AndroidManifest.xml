@@ -41,8 +41,7 @@
             android:name=".StudentMapActivity"
             android:label="@string/title_activity_student_map"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/ThemeNoActionBar" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".DriverMapActivity"
@@ -53,9 +52,8 @@
         </activity>
         <activity android:name=".SignupActivity"
                   android:label="Signup"
-                  android:configChanges="orientation|keyboardHidden"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/ThemeNoActionBar" >
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait" >
         </activity>
     </application>
 

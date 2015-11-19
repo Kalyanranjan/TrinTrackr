@@ -12,6 +12,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,7 +37,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private Marker mPassenger1;
     private Marker mPassenger2;
-    private Marker Passenger3;
+    private Marker mPassenger3;
+
+    private int mInterval = 1000; // 1 seconds by default, can be changed later
+    private int mTest = 1000;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,29 +65,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mShuttleStop.setEnabled(false);
         mShuttleStart.setEnabled(true);
 
-        mPass1Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Make passenger 1 appear
-            }
-        });
-
-        mPass2Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Make passenger 2 appear and disappear on clicking again maybe
-            }
-        });
-
-        mPass3Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Make passenger 3 appear
-            }
-        });
 
         mShuttleStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,11 +87,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 mPass3Button.setEnabled(false);
                 mShuttleStop.setEnabled(false);
                 mShuttleStart.setEnabled(true);
+                mPassenger1.remove();
+                mPassenger2.remove();
+                mPassenger3.remove();
             }
         });
 
 
-
+        mHandler = new Handler();
+        //startRepeatingTask();
 
     }
 
@@ -132,85 +118,68 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         MarkerOptions mOptions = new MarkerOptions().position(home).title("Where do you want the shuttle?");
         mVehicle = mMap.addMarker(mOptions);
         mVehicle.setDraggable(true);
+
+        mPass1Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MarkerOptions mar = new MarkerOptions()
+                        .position(new LatLng(41.747977, -72.693216))
+                        .title("This is my title")
+                        .snippet("and snippet")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                mPassenger1 = mMap.addMarker(mar);
+            }
+        });
+
+        mPass2Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MarkerOptions mar = new MarkerOptions()
+                        .position(new LatLng(41.751824, -72.687094))
+                        .title("This is my title")
+                        .snippet("and snippet")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                mPassenger2 = mMap.addMarker(mar);
+            }
+        });
+
+        mPass3Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MarkerOptions mar = new MarkerOptions()
+                        .position(new LatLng(41.747056, -72.687155))
+                        .title("This is my title")
+                        .snippet("and snippet")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                mPassenger3 = mMap.addMarker(mar);
+            }
+        });
     }
 
-/*
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home, 16));
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-        mMap.animateCamera(zoom);
-        MarkerOptions mOptions = new MarkerOptions().position(home).title("Where do you want the shuttle?");
-        mStudent = mMap.addMarker(mOptions);
-        mStudent.setDraggable(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            LatLng pos = mVehicle.getPosition();
+            double x = pos.longitude;
+            double y = pos.latitude;
+            x = x + 0.001;
+
+
+            mVehicle.remove();
+            MarkerOptions mar = new MarkerOptions()
+                    .position(new LatLng(y, x))
+                    .title("This is my title")
+                    .snippet("and snippet")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            mVehicle = mMap.addMarker(mar);
+
+
+            mHandler.postDelayed(mStatusChecker, mInterval);
+        }
+    };
+
+    void startRepeatingTask() {
+        mStatusChecker.run();
+
     }
-    */
 }
-//
-//package pranav.kalyan.suhas.trintrackr;
-//
-//        import android.os.Handler;
-//        import android.support.v4.app.FragmentActivity;
-//        import android.os.Bundle;
-//        import android.view.Gravity;
-//        import android.view.View;
-//        import android.widget.Button;
-//        import android.widget.TextView;
-//
-//        import com.google.android.gms.maps.CameraUpdate;
-//        import com.google.android.gms.maps.CameraUpdateFactory;
-//        import com.google.android.gms.maps.GoogleMap;
-//        import com.google.android.gms.maps.OnMapReadyCallback;
-//        import com.google.android.gms.maps.SupportMapFragment;
-//        import com.google.android.gms.maps.model.LatLng;
-//        import com.google.android.gms.maps.model.Marker;
-//        import com.google.android.gms.maps.model.MarkerOptions;
-//
-//
-//    private GoogleMap mMap;
-//    private LatLng home = new LatLng(41.747270, -72.690354);
-//    private Button mCall;
-//    private Button mCancel;
-//    private Marker mStudent;
-//    private Button mStartShuttle;
-//    private Button mStopShuttle;
-//    private TextView mMessage;
-//    private int mInterval = 1000; // 1 seconds by default, can be changed later
-//    private int mTest = 1000;
-//    private Handler mHandler;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_driver_map);
-//        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-//        //startRepeatingTask();
-//    }
-//
-//
-//    /**
-//     * Manipulates the map once available.
-//     * This callback is triggered when the map is ready to be used.
-//     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-//     * we just add a marker near Sydney, Australia.
-//     * If Google Play services is not installed on the device, the user will be prompted to install
-//     * it inside the SupportMapFragment. This method will only be triggered once the user has
-//     * installed Google Play services and returned to the app.
-//     */
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        mMap = googleMap;
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(home, 16));
-//        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-//        mMap.animateCamera(zoom);
-//        MarkerOptions mOptions = new MarkerOptions().position(home).title("Where do you want the shuttle?");
-//        mStudent = mMap.addMarker(mOptions);
-//        mStudent.setDraggable(true);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
-//    }
-//}

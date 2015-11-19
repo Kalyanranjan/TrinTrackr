@@ -25,6 +25,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private Button mCall;
     private Button mCancel;
     private Marker mStudent;
+    private Marker mShuttle;
     private Button mStartShuttle;
     private Button mStopShuttle;
     private TextView mMessage;
