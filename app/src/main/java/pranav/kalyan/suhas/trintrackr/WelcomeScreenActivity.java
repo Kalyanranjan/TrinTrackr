@@ -58,17 +58,28 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 findViewById(R.id.loginStudent).setVisibility(LinearLayout.GONE);
                 findViewById(R.id.loginSelect).setVisibility(LinearLayout.VISIBLE);
             }
-        });;
+        });
 
         // Going inside after login
-        mLoginAsDriverButton = (Button) findViewById(R.id.submitLoginDriverButton);
-        mLoginAsDriverButton.setOnClickListener(new View.OnClickListener() {
+        mSubmitDriverLoginButton = (Button) findViewById(R.id.submitLoginDriverButton);
+        mSubmitDriverLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(WelcomeScreenActivity.this, StudentMapActivity.class);
                 startActivity(i);
             }
         });
+
+        mSubmitStudentLoginButton = (Button) findViewById(R.id.submitLoginStudentButton);
+        mSubmitStudentLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(WelcomeScreenActivity.this, StudentMapActivity.class);
+                startActivity(i);
+            }
+        });
+
+
 
     }
 }
