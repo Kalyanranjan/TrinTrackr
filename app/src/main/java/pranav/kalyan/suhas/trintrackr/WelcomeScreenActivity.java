@@ -76,7 +76,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 String suser = ((EditText) findViewById(R.id.student_username)).getText().toString();
                 String spass = ((EditText) findViewById(R.id.student_passcode)).getText().toString();
 
-                if (suser.equals("Pra") && spass.equals("nav")) {
+                if (suser.equals("") && spass.equals("")) {
                     ((TextView) findViewById(R.id.studentLoginMessage)).setText("");
                     Intent i = new Intent(WelcomeScreenActivity.this, StudentMapActivity.class);
                     startActivity(i);
@@ -93,7 +93,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 String duser = ((EditText) findViewById(R.id.driver_username)).getText().toString();
                 String dpass = ((EditText) findViewById(R.id.driver_passcode)).getText().toString();
 
-                if (duser.equals("Kal") && dpass.equals("yan")) {
+                if (duser.equals("") && dpass.equals("")) {
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
                     Intent i = new Intent(WelcomeScreenActivity.this, DriverMapActivity.class);
                     startActivity(i);
