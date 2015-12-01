@@ -90,15 +90,27 @@
 
                 android:visibility="gone">
 
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/studentLoginMessage"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textSize="25sp"
+                    android:text=""/>
+
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/student_username"
 
                     android:hint="Student Username"/>
 
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/student_passcode"
 
                     android:hint="Student Passcode"
                     android:inputType="textPassword"/>
@@ -125,6 +137,8 @@
                         android:id="@+id/submitLoginStudentButton"/>
 
                 </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -138,15 +152,28 @@
 
                 android:visibility="gone">
 
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/driverLoginMessage"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textSize="25sp"
+                    android:text=""/>
+
+
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/driver_username"
 
                     android:hint="Driver Username"/>
 
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/driver_passcode"
 
                     android:hint="Driver Passcode"
                     android:inputType="textPassword"/>
@@ -176,6 +203,14 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign Up"
+                android:textSize="30sp"
+                android:textAlignment="center"
+
+                android:id="@+id/signupText"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -2,7 +2,18 @@
     <string name="app_name">TrinTrackr</string>
     <string name="app_title"> <b>TrinTracker</b> \n Trinity College On Campus Shuttle Tracker</string>
     <string name="title_activity_student_map">Student Map</string>
+    <string name="title_activity_driver_map">Driver Map</string>
     <string name="title_activity_maps">Map</string>
     <string name="call_shuttle">Call</string>
     <string name="cancel_shuttle">Cancel</string>
+    <string name="start_shuttle">Start</string>
+    <string name="stop_shuttle">Stop</string>
+    <string name="passenger1">Passenger 1</string>
+    <string name="passenger2">Passenger 2</string>
+    <string name="passenger3">Passenger 3</string>
+    <string name="no_shuttle">Sorry! The shuttle is not running.</string>
+    <string name="yes_shuttle">Shuttle Running</string>
+    <string name="shuttle_arriving">Shuttle Arriving</string>
+    <string name="shuttle_called">Shuttle Called</string>
+    <string name="shuttle_cancel">Shuttle Cancelled</string>
 </resources>
