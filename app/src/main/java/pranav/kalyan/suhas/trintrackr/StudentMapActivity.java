@@ -21,7 +21,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class StudentMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private LatLng home = new LatLng(41.747270, -72.690354);
+    private double lati = 41.747270;
+    private double longi = 72.690354;
+    private LatLng home = new LatLng(41.747270, -72.690354 );
     private Button mCall;
     private Button mCancel;
     private Marker mStudent;
@@ -31,6 +33,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private TextView mMessage;
     private int mInterval = 1000; // 1 seconds by default, can be changed later
     private int mTest = 1000;
+    private int count = 0;
     private Handler mHandler;
 
     @Override
@@ -45,8 +48,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         mMessage = (TextView) findViewById(R.id.student_message_board);
         mMessage.setText(R.string.no_shuttle);
 
-        mHandler = new Handler();
-        //startRepeatingTask();
+
     }
 
 
@@ -68,7 +70,9 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         MarkerOptions mOptions = new MarkerOptions().position(home).title("Where do you want the shuttle?");
         mStudent = mMap.addMarker(mOptions);
         mStudent.setDraggable(true);
+        mShuttle = mMap.addMarker(mOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
+        mMap.setMyLocationEnabled(true);
 
 
         mCall = (Button) findViewById(R.id.student_call_shuttle);
@@ -126,22 +130,30 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mMessage.setText(R.string.shuttle_cancel);
             }
         });
+
+        mHandler = new Handler();
+        startRepeatingTask();
     }
 
-    Runnable mStatusChecker = new Runnable() {
-        @Override
-        public void run() {
-            mTest  -= 1;
-            mMessage.setText(String.valueOf(mTest));
-            mHandler.postDelayed(mStatusChecker, mInterval);
-        }
-    };
+  Runnable mStatusChecker = new Runnable() {
+    @Override
+    public void run() {
+      lati = lati + 0.0001;
+        longi = longi + 0.0001;
+        //mStudent.setPosition(new LatLng(lati, longi));
+        mShuttle.setPosition(new LatLng(lati, -longi));
 
-    void startRepeatingTask() {
-        mStatusChecker.run();
-    }
 
-    void stopRepeatingTask() {
-        mHandler.removeCallbacks(mStatusChecker);
+        mMessage.setText(String.valueOf(lati));
+      mHandler.postDelayed(mStatusChecker, mInterval);
     }
+  };
+
+  void startRepeatingTask() {
+    mStatusChecker.run();
+  }
+
+  void stopRepeatingTask() {
+    mHandler.removeCallbacks(mStatusChecker);
+  }
 }
