@@ -107,7 +107,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         mSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(WelcomeScreenActivity.this, SignupActivity.class);
+                Intent i = new Intent(WelcomeScreenActivity.this, DriverTracker.class);
                 startActivity(i);
             }
         });

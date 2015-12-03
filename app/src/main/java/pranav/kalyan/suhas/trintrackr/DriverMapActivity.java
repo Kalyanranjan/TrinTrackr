@@ -33,7 +33,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private Button mShuttleStart;
     private Button mShuttleStop;
-    private boolean mShuttleStarted;
+    boolean mShuttleStarted;
 
     private Marker mPassenger1;
     private Marker mPassenger2;

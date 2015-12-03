@@ -16,4 +16,5 @@
     <string name="shuttle_arriving">Shuttle Arriving</string>
     <string name="shuttle_called">Shuttle Called</string>
     <string name="shuttle_cancel">Shuttle Cancelled</string>
+    <string name="title_activity_driver_tracker">Map</string>
 </resources>

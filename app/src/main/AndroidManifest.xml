@@ -9,7 +9,6 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/trinlogo"
@@ -40,21 +39,26 @@
 
         <activity
             android:name=".StudentMapActivity"
-            android:label="@string/title_activity_student_map"
             android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_student_map"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".DriverMapActivity"
-            android:label="@string/title_activity_driver_map"
             android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_driver_map"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeNoActionBar" >
         </activity>
-        <activity android:name=".SignupActivity"
-                  android:label="Signup"
-                  android:configChanges="orientation"
-                  android:screenOrientation="portrait" >
+        <activity
+            android:name=".SignupActivity"
+            android:configChanges="orientation"
+            android:label="Signup"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".DriverTracker"
+            android:label="@string/title_activity_driver_tracker" >
         </activity>
     </application>
 

@@ -1,5 +1,6 @@
 package pranav.kalyan.suhas.trintrackr;
 
+import android.location.Location;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private int mTest = 1000;
     private int count = 0;
     private Handler mHandler;
+    DriverTracker track = new DriverTracker();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
 
         mMessage = (TextView) findViewById(R.id.student_message_board);
+
         mMessage.setText(R.string.no_shuttle);
 
 
