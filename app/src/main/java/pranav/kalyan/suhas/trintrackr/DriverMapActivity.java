@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -75,6 +76,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 mPass3Button.setEnabled(true);
                 mShuttleStop.setEnabled(true);
                 mShuttleStart.setEnabled(false);
+
+                Toast.makeText(DriverMapActivity.this, "Starting Shuttle", Toast.LENGTH_SHORT).show();
+                new DriverRequestActivity(DriverMapActivity.this).execute("suhas","1","10","20");
+
             }
         });
 
@@ -90,6 +95,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 mPassenger1.remove();
                 mPassenger2.remove();
                 mPassenger3.remove();
+
+
+                Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
+                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "0", "0", "0");
+
             }
         });
 
