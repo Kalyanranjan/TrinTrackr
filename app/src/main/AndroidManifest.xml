@@ -40,18 +40,21 @@
 
         <activity
             android:name=".StudentMapActivity"
+            android:parentActivityName=".WelcomeScreenActivity"
             android:label="@string/title_activity_student_map"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".DriverMapActivity"
+            android:parentActivityName=".WelcomeScreenActivity"
             android:label="@string/title_activity_driver_map"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeNoActionBar" >
         </activity>
         <activity android:name=".SignupActivity"
+                  android:parentActivityName=".WelcomeScreenActivity"
                   android:label="Signup"
                   android:configChanges="orientation"
                   android:screenOrientation="portrait" >
