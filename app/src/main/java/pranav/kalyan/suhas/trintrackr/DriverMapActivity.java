@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    // Broad Stree other end location = 41.745589, -72.687198
+    // Broad Street other end location = 41.745589, -72.687198
     // Good step for longitude (2nd value) will be -0.000043 per second
     // Good step for latitude (1st value) will be -0.0002 per second
 
@@ -95,10 +95,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
         mHandler = new Handler();
-        //startRepeatingTask();
-
+//        startRepeatingTask();
     }
-
 
     /**
      * Manipulates the map once available.
@@ -180,6 +178,5 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     void startRepeatingTask() {
         mStatusChecker.run();
-
     }
 }
