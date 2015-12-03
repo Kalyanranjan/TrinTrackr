@@ -4,6 +4,7 @@
     <string name="title_activity_student_map">Student Map</string>
     <string name="title_activity_driver_map">Driver Map</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_student_signup">Student Signup</string>
     <string name="call_shuttle">Call</string>
     <string name="cancel_shuttle">Cancel</string>
     <string name="start_shuttle">Start</string>
@@ -16,4 +17,16 @@
     <string name="shuttle_arriving">Shuttle Arriving</string>
     <string name="shuttle_called">Shuttle Called</string>
     <string name="shuttle_cancel">Shuttle Cancelled</string>
+    <string name="button_login">Login</string>
+    <string name="textview_password">Enter Password</string>
+    <string name="string_username">Enter Username</string>
+    <string name="string_already_registered">Already Registered</string>
+    <string name="title_activity_activity_login">ActivityLogin</string>
+    <string name="string_user_login">Login</string>
+    <string name="title_activity_user_profile">UserProfile</string>
+    <string name="string_enter_name">Enter your name</string>
+    <string name="string_choose_username">Choose your username</string>
+    <string name="string_choose_password">Choose your password</string>
+    <string name="string_enter_email">Enter your email</string>
+    <string name="button_register">Register</string>
 </resources>
