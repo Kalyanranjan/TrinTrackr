@@ -34,7 +34,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private Button mShuttleStart;
     private Button mShuttleStop;
-    boolean mShuttleStarted;
+    private boolean mShuttleStarted;
+    private boolean pass1check, pass2check, pass3check;
 
     private Marker mPassenger1;
     private Marker mPassenger2;
@@ -65,6 +66,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mPass3Button.setEnabled(false);
         mShuttleStop.setEnabled(false);
         mShuttleStart.setEnabled(true);
+        pass2check = false;
+        pass1check = false;
+        pass3check = false;
 
 
         mShuttleStart.setOnClickListener(new View.OnClickListener() {
@@ -86,19 +90,26 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mShuttleStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShuttleStarted = false;
+                if (pass1check) {
+                    mPassenger1.remove();
+                }
+                if (pass2check) {
+                    mPassenger2.remove();
+                }
+                if (pass3check){
+                    mPassenger3.remove();
+                }
                 mPass1Button.setEnabled(false);
                 mPass2Button.setEnabled(false);
                 mPass3Button.setEnabled(false);
                 mShuttleStop.setEnabled(false);
                 mShuttleStart.setEnabled(true);
-                mPassenger1.remove();
-                mPassenger2.remove();
-                mPassenger3.remove();
+
+                mShuttleStarted = false;
 
 
-                Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
-                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "0", "0", "0");
+                //Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
+                //new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "0", "0", "0");
 
             }
         });
@@ -136,6 +147,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         .snippet("and snippet")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 mPassenger1 = mMap.addMarker(mar);
+                pass1check = true;
             }
         });
 
@@ -148,6 +160,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         .snippet("and snippet")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 mPassenger2 = mMap.addMarker(mar);
+                pass2check = true;
             }
         });
 
@@ -160,6 +173,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         .snippet("and snippet")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 mPassenger3 = mMap.addMarker(mar);
+                pass3check = true;
             }
         });
     }
