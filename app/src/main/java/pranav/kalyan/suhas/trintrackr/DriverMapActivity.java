@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +35,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Button mShuttleStart;
     private Button mShuttleStop;
     private boolean mShuttleStarted;
+    private boolean pass1check, pass2check, pass3check;
 
     private Marker mPassenger1;
     private Marker mPassenger2;
@@ -43,6 +45,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private int mTest = 1000;
     private Handler mHandler;
 
+    public String mDriver;
+
+    /* Students on the road */
+    private int mNumStudent = 0;
+    private String[] mStudents = new String[255];
+
+    public String toString(){
+        String string = "|";
+        for (int i=1; i<=mNumStudent; i++){
+            string+=this.mStudents[3*i-3]+" | "+this.mStudents[3*i-2]+" | "+this.mStudents[3*i-1]+" | ";
+        }
+        return string;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +68,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.driverMap);
         mapFragment.getMapAsync(this);
+
+        final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
+        getStudent.execute();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                mNumStudent = getStudent.getStNum();
+                mStudents = getStudent.getStudents();
+                Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
+            }
+        }, 2000);
 
         mPass1Button = (Button) findViewById(R.id.passenger1);
         mPass2Button = (Button) findViewById(R.id.passenger2);
@@ -64,6 +93,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mPass3Button.setEnabled(false);
         mShuttleStop.setEnabled(false);
         mShuttleStart.setEnabled(true);
+        pass2check = false;
+        pass1check = false;
+        pass3check = false;
 
 
         mShuttleStart.setOnClickListener(new View.OnClickListener() {
@@ -75,21 +107,37 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 mPass3Button.setEnabled(true);
                 mShuttleStop.setEnabled(true);
                 mShuttleStart.setEnabled(false);
+
+                Toast.makeText(DriverMapActivity.this, "Starting Shuttle", Toast.LENGTH_SHORT).show();
+                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "1", "10", "20");
+
             }
         });
 
         mShuttleStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShuttleStarted = false;
+                if (pass1check) {
+                    mPassenger1.remove();
+                }
+                if (pass2check) {
+                    mPassenger2.remove();
+                }
+                if (pass3check){
+                    mPassenger3.remove();
+                }
                 mPass1Button.setEnabled(false);
                 mPass2Button.setEnabled(false);
                 mPass3Button.setEnabled(false);
                 mShuttleStop.setEnabled(false);
                 mShuttleStart.setEnabled(true);
-                mPassenger1.remove();
-                mPassenger2.remove();
-                mPassenger3.remove();
+
+                mShuttleStarted = false;
+
+
+                Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
+                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "0", "0", "0");
+
             }
         });
 
@@ -126,6 +174,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         .snippet("and snippet")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 mPassenger1 = mMap.addMarker(mar);
+                pass1check = true;
             }
         });
 
@@ -138,6 +187,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         .snippet("and snippet")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 mPassenger2 = mMap.addMarker(mar);
+                pass2check = true;
             }
         });
 
@@ -150,6 +200,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         .snippet("and snippet")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 mPassenger3 = mMap.addMarker(mar);
+                pass3check = true;
             }
         });
     }

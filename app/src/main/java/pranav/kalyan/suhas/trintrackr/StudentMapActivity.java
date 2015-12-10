@@ -1,5 +1,6 @@
 package pranav.kalyan.suhas.trintrackr;
 
+import android.location.Location;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,6 +18,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class StudentMapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -36,6 +42,22 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private int count = 0;
     private Handler mHandler;
 
+    private String mSudentName;
+    DriverTracker track = new DriverTracker();
+
+    /* Drivers on the road */
+    private int mNumDriver = 0;
+    private String[] mDrivers = new String[30];
+
+
+    public String toString(){
+        String string = "|";
+        for (int i=1; i<=mNumDriver; i++){
+            string+=this.mDrivers[3*i-3]+" | "+this.mDrivers[3*i-2]+" | "+this.mDrivers[3*i-1]+" | ";
+        }
+        return string;
+   };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +68,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
 
         mMessage = (TextView) findViewById(R.id.student_message_board);
+
         mMessage.setText(R.string.no_shuttle);
 
 
@@ -92,6 +115,18 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStopShuttle.setEnabled(true);
                 mStartShuttle.setEnabled(false);
                 mMessage.setText(R.string.yes_shuttle);
+
+                final GetDrLocActivity getDriver = new GetDrLocActivity(StudentMapActivity.this);
+                getDriver.execute();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        mNumDriver = getDriver.getDrNum();
+                        mDrivers = getDriver.getDrivers();
+                        Toast.makeText(StudentMapActivity.this, getDriver.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StudentMapActivity.this, String.valueOf(mNumDriver), Toast.LENGTH_SHORT).show();
+                    }
+                }, 2000);
             }
         });
 
@@ -115,11 +150,16 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStudent.setDraggable(false);
                 mCancel.setEnabled(true);
                 mCall.setEnabled(false);
-                mMessage.setText(R.string.shuttle_called);
+                //mMessage.setText(R.string.shuttle_called);
+                LatLng student = mStudent.getPosition();
+                String x = Double.toString(student.latitude);
+                String y = Double.toString(student.longitude);
+
+                Toast.makeText(StudentMapActivity.this, "Calling Shuttle", Toast.LENGTH_SHORT).show();
+                new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "1", x, y);
+
             }
         });
-
-
 
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +167,11 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStudent.setDraggable(true);
                 mCall.setEnabled(true);
                 mCancel.setEnabled(false);
-                mMessage.setText(R.string.shuttle_cancel);
+                //mMessage.setText(R.string.shuttle_cancel);
+
+                Toast.makeText(StudentMapActivity.this, "Cancelling Shuttle", Toast.LENGTH_SHORT).show();
+                StudentRequestActivity sra = (StudentRequestActivity)new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "0", "0", "0");
+
             }
         });
 

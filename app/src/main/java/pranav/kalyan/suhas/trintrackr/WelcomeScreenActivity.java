@@ -106,7 +106,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
                 if (duser.equals("driver") && dpass.equals("driver")) {
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
-                    Intent i = new Intent(WelcomeScreenActivity.this, DriverMapActivity.class);
+                    Intent i = new Intent(WelcomeScreenActivity.this, DriverTracker.class);
                     startActivity(i);
                 } else {
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("Invalid Credentials!");
@@ -118,7 +118,11 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         mSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent i = new Intent(WelcomeScreenActivity.this, StudentSignupActivity.class);
+
+                Intent i = new Intent(WelcomeScreenActivity.this, DriverTracker.class);
+             
                 startActivity(i);
             }
         });
