@@ -21,12 +21,12 @@ public class GetDrLocActivity extends AsyncTask<String, Void, String> {
     private int drNum = 0;
     private String[] drivers = new String[255]; //Only 85 drivers max
 
-    public int getStNum() {
+    public int getDrNum() {
         return drNum;
     }
 
-    private void setStNum(int stNum) {
-        this.drNum = stNum;
+    private void setDrNum(int drNum) {
+        this.drNum = drNum;
     }
 
     public String[] getDrivers() {
@@ -76,7 +76,7 @@ public class GetDrLocActivity extends AsyncTask<String, Void, String> {
                 JSONObject jsonObj = new JSONObject(result);
                 JSONObject jsonObj2;
                 String temp1="", temp2="", temp3="";
-                this.setStNum(Integer.parseInt(jsonObj.getString("num")));
+                this.setDrNum(Integer.parseInt(jsonObj.getString("num")));
                 for (int x=1; x <= this.drNum; x++) {
                     jsonObj2 = new JSONObject(jsonObj.getString(String.valueOf(x)));
                     temp1 = jsonObj2.getString(String.valueOf("username"));
