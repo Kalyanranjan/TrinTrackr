@@ -102,9 +102,9 @@ public class StudentRequestActivity extends AsyncTask<String,Void,String> {
             try {
                 JSONObject jsonObj = new JSONObject(result);
                 String message = "Requested:"+ jsonObj.getString("Active")+" Lat:"+jsonObj.getString("lat")+" Lng:"+jsonObj.getString("lng");
-                this.setRetStdStatus(Integer.parseInt(jsonObj.getString("Active")));
-                this.setRetLat(Integer.parseInt(jsonObj.getString("lat")));
-                this.setRetLng(Integer.parseInt(jsonObj.getString("lng")));
+                //this.setRetStdStatus(Integer.parseInt(jsonObj.getString("Active")));
+                //this.setRetLat(Integer.parseInt(jsonObj.getString("lat")));
+                //this.setRetLng(Integer.parseInt(jsonObj.getString("lng")));
 
                 //String message = "hell"+"no";
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();

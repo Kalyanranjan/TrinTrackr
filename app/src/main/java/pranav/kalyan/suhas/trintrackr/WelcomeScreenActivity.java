@@ -95,7 +95,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
                 if (duser.equals("") && dpass.equals("")) {
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
-                    Intent i = new Intent(WelcomeScreenActivity.this, DriverMapActivity.class);
+                    Intent i = new Intent(WelcomeScreenActivity.this, DriverTracker.class);
                     startActivity(i);
                 } else {
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("Invalid Credentials!");

@@ -151,10 +151,12 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mCancel.setEnabled(true);
                 mCall.setEnabled(false);
                 //mMessage.setText(R.string.shuttle_called);
+                LatLng student = mStudent.getPosition();
+                String x = Double.toString(student.latitude);
+                String y = Double.toString(student.longitude);
 
                 Toast.makeText(StudentMapActivity.this, "Calling Shuttle", Toast.LENGTH_SHORT).show();
-                StudentRequestActivity sra = new StudentRequestActivity(StudentMapActivity.this);
-                sra.execute("pranav", "1", "30", "55");
+                new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "1", x, y);
 
             }
         });

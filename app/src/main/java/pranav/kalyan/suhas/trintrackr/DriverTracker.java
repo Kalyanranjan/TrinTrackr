@@ -4,18 +4,23 @@ package pranav.kalyan.suhas.trintrackr;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class DriverTracker extends FragmentActivity implements
@@ -37,6 +42,12 @@ public class DriverTracker extends FragmentActivity implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     String x = "HHH";
+    TextView message;
+    private LatLng trin = new LatLng(41.747270, -72.690354);
+    MarkerOptions options;
+    Marker mShuttle;
+    private Handler mHandler;
+    private int mInterval = 1000; // 1 seconds by default, can be changed later
 
 
 
@@ -45,6 +56,7 @@ public class DriverTracker extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_tracker);
         setUpMapIfNeeded();
+        message = (TextView) findViewById(R.id.current_location);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -58,6 +70,8 @@ public class DriverTracker extends FragmentActivity implements
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
+        mHandler = new Handler();
+        startRepeatingTask();
 
     }
 
@@ -100,6 +114,9 @@ public class DriverTracker extends FragmentActivity implements
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(trin, 16));
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+            mMap.animateCamera(zoom);
             if (mMap != null) {
                 setUpMap();
             }
@@ -130,13 +147,15 @@ public class DriverTracker extends FragmentActivity implements
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
+        message.setText(String.valueOf(currentLatitude) + "    " + String.valueOf(currentLongitude));
+
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
-        MarkerOptions options = new MarkerOptions()
+        options = new MarkerOptions()
                 .position(latLng)
                 .title("I am here!");
-        mMap.addMarker(options);
+        mShuttle = mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
@@ -187,6 +206,32 @@ public class DriverTracker extends FragmentActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
+        mShuttle.remove();
         handleNewLocation(location);
+        double cur = location.getLatitude();
+        message.setText(String.valueOf(cur));
+
+    }
+
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+
+
+
+
+
+            mHandler.postDelayed(mStatusChecker, mInterval);
+        }
+    };
+
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
+
+
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
     }
 }
