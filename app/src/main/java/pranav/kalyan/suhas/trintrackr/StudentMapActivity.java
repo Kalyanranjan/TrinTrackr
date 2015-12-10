@@ -56,7 +56,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
             string+=this.mDrivers[3*i-3]+" | "+this.mDrivers[3*i-2]+" | "+this.mDrivers[3*i-1]+" | ";
         }
         return string;
-    }
+   };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +154,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
 
                 Toast.makeText(StudentMapActivity.this, "Calling Shuttle", Toast.LENGTH_SHORT).show();
                 StudentRequestActivity sra = new StudentRequestActivity(StudentMapActivity.this);
-                sra.execute("pranav", "0", "0", "0");
+                sra.execute("pranav", "1", "30", "55");
 
             }
         });
