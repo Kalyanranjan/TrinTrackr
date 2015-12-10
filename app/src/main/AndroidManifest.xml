@@ -63,9 +63,9 @@
         </activity>
         <activity android:name=".StudentRequestActivity" >
         </activity>
-        <activity android:name=".GetDrLocActivity" >
-        </activity>
         <activity android:name=".GetStLocActivity" >
+        </activity>
+        <activity android:name=".GetDrLocActivity" >
         </activity>
     </application>
 
