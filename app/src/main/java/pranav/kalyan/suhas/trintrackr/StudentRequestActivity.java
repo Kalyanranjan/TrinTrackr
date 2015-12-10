@@ -102,6 +102,8 @@ public class StudentRequestActivity extends AsyncTask<String,Void,String> {
             try {
                 JSONObject jsonObj = new JSONObject(result);
                 String message = "Requested:"+ jsonObj.getString("Active")+" Lat:"+jsonObj.getString("lat")+" Lng:"+jsonObj.getString("lng");
+
+                /*NOT REQUIRED NOW - USED FOR TESTING */
                 //this.setRetStdStatus(Integer.parseInt(jsonObj.getString("Active")));
                 //this.setRetLat(Integer.parseInt(jsonObj.getString("lat")));
                 //this.setRetLng(Integer.parseInt(jsonObj.getString("lng")));

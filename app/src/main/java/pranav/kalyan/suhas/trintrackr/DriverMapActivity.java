@@ -45,6 +45,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private int mTest = 1000;
     private Handler mHandler;
 
+
+    private Handler mHandler2 = new Handler();
+    private final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
+
     public String mDriver;
 
     /* Students on the road */
@@ -69,17 +73,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.driverMap);
         mapFragment.getMapAsync(this);
 
-        final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
         getStudent.execute();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        mHandler2.postDelayed(new Runnable() {
             public void run() {
                 mNumStudent = getStudent.getStNum();
                 mStudents = getStudent.getStudents();
                 Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
             }
-        }, 2000);
+        }, 500);
+
 
         mPass1Button = (Button) findViewById(R.id.passenger1);
         mPass2Button = (Button) findViewById(R.id.passenger2);

@@ -34,16 +34,19 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private Button mCancel;
     private Marker mStudent;
     private Marker mShuttle;
+    private int mShuttleStarted = 0;
     private Button mStartShuttle;
     private Button mStopShuttle;
     private TextView mMessage;
-    private int mInterval = 1000; // 1 seconds by default, can be changed later
+    private int mInterval = 3000; // 1 seconds by default, can be changed later
     private int mTest = 1000;
     private int count = 0;
     private Handler mHandler;
 
     private String mSudentName;
     DriverTracker track = new DriverTracker();
+
+    //private final GetDrLocActivity getDriver = new GetDrLocActivity(StudentMapActivity.this);
 
     /* Drivers on the road */
     private int mNumDriver = 0;
@@ -93,7 +96,6 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         MarkerOptions mOptions = new MarkerOptions().position(home).title("Where do you want the shuttle?");
         mStudent = mMap.addMarker(mOptions);
         mStudent.setDraggable(true);
-        mShuttle = mMap.addMarker(mOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
         mMap.setMyLocationEnabled(true);
 
@@ -116,17 +118,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStartShuttle.setEnabled(false);
                 mMessage.setText(R.string.yes_shuttle);
 
-                final GetDrLocActivity getDriver = new GetDrLocActivity(StudentMapActivity.this);
-                getDriver.execute();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        mNumDriver = getDriver.getDrNum();
-                        mDrivers = getDriver.getDrivers();
-                        Toast.makeText(StudentMapActivity.this, getDriver.toString(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(StudentMapActivity.this, String.valueOf(mNumDriver), Toast.LENGTH_SHORT).show();
-                    }
-                }, 2000);
+
             }
         });
 
@@ -151,12 +143,9 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mCancel.setEnabled(true);
                 mCall.setEnabled(false);
                 //mMessage.setText(R.string.shuttle_called);
-                LatLng student = mStudent.getPosition();
-                String x = Double.toString(student.latitude);
-                String y = Double.toString(student.longitude);
 
                 Toast.makeText(StudentMapActivity.this, "Calling Shuttle", Toast.LENGTH_SHORT).show();
-                new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "1", x, y);
+                new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "1", "30", "55");
 
             }
         });
@@ -182,14 +171,43 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
   Runnable mStatusChecker = new Runnable() {
     @Override
     public void run() {
-      lati = lati + 0.0001;
-        longi = longi + 0.0001;
+
+        final GetDrLocActivity getDriver = new GetDrLocActivity(StudentMapActivity.this);
+        getDriver.execute();
+        Handler mHandler2 = new Handler();
+        mHandler2.postDelayed(new Runnable() {
+            public void run() {
+                mNumDriver = getDriver.getDrNum();
+                mDrivers = getDriver.getDrivers();
+                MarkerOptions mOptions = new MarkerOptions().position(home).title("Shuttle");
+                if (mNumDriver > 0) {
+                    if (mShuttleStarted == 0) {
+                        mShuttle = mMap.addMarker(mOptions);
+                        mShuttleStarted = 1;
+                    }
+
+                    lati = Double.parseDouble(mDrivers[1]);
+                    longi = Double.parseDouble(mDrivers[2]);
+                } else {
+                    if (mShuttleStarted == 1) {
+                        mShuttle.remove();
+                        mShuttleStarted = 0;
+                    }
+                }
+                mShuttle.setPosition(new LatLng(lati, longi));
+                //Toast.makeText(StudentMapActivity.this, getDriver.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(StudentMapActivity.this, String.valueOf(mNumDriver), Toast.LENGTH_SHORT).show();
+            }
+        }, 500);
+
+        //getDriver.cancel(true);
+
         //mStudent.setPosition(new LatLng(lati, longi));
-        mShuttle.setPosition(new LatLng(lati, -longi));
+        //mShuttle.setPosition(new LatLng(lati, -longi));
 
 
         mMessage.setText(String.valueOf(lati));
-      mHandler.postDelayed(mStatusChecker, mInterval);
+        mHandler.postDelayed(mStatusChecker, mInterval);
     }
   };
 
