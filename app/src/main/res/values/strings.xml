@@ -17,7 +17,7 @@
     <string name="shuttle_arriving">Shuttle Arriving</string>
     <string name="shuttle_called">Shuttle Called</string>
     <string name="shuttle_cancel">Shuttle Cancelled</string>
-<<<<<<< HEAD
+
     <string name="button_login">Login</string>
     <string name="textview_password">Enter Password</string>
     <string name="string_username">Enter Username</string>
@@ -30,7 +30,7 @@
     <string name="string_choose_password">Choose your password</string>
     <string name="string_enter_email">Enter your email</string>
     <string name="button_register">Register</string>
-=======
+
     <string name="title_activity_driver_tracker">Map</string>
->>>>>>> upstream/master
+
 </resources>

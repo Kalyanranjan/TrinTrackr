@@ -61,13 +61,6 @@
 
         <activity
             android:name=".StudentSignupActivity"
-            android:parentActivityName=".WelcomeScreenActivity"
-            android:label="@string/title_activity_student_signup"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" >
-
-        <activity
-            android:name=".SignupActivity"
             android:configChanges="orientation"
             android:label="Signup"
             android:parentActivityName=".WelcomeScreenActivity"

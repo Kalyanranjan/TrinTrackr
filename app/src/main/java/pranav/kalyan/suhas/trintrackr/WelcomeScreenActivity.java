@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class WelcomeScreenActivity extends AppCompatActivity {
@@ -120,8 +122,6 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent i = new Intent(WelcomeScreenActivity.this, StudentSignupActivity.class);
-
-                Intent i = new Intent(WelcomeScreenActivity.this, DriverTracker.class);
              
                 startActivity(i);
             }
@@ -129,8 +129,32 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
     }
 
+    public static final String md5(final String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < messageDigest.length; i++) {
+                String h = Integer.toHexString(0xFF & messageDigest[i]);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     private void login(String username, String password){
-        userLogin(username,password);
+        userLogin(username,md5(password));
     }
 
     private void userLogin(final String username, final String password){
