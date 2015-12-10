@@ -45,6 +45,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private int mTest = 1000;
     private Handler mHandler;
 
+    public String mDriver;
+
+    /* Students on the road */
+    private int mNumStudent = 0;
+    private String[] mStudents = new String[255];
+
+    public String toString(){
+        String string = "|";
+        for (int i=1; i<=mNumStudent; i++){
+            string+=this.mStudents[3*i-3]+" | "+this.mStudents[3*i-2]+" | "+this.mStudents[3*i-1]+" | ";
+        }
+        return string;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +68,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.driverMap);
         mapFragment.getMapAsync(this);
+
+        final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
+        getStudent.execute();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                mNumStudent = getStudent.getStNum();
+                mStudents = getStudent.getStudents();
+                Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
+            }
+        }, 2000);
 
         mPass1Button = (Button) findViewById(R.id.passenger1);
         mPass2Button = (Button) findViewById(R.id.passenger2);
@@ -82,7 +109,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 mShuttleStart.setEnabled(false);
 
                 Toast.makeText(DriverMapActivity.this, "Starting Shuttle", Toast.LENGTH_SHORT).show();
-                new DriverRequestActivity(DriverMapActivity.this).execute("suhas","1","10","20");
+                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "1", "10", "20");
 
             }
         });
@@ -108,8 +135,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 mShuttleStarted = false;
 
 
-                //Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
-                //new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "0", "0", "0");
+                Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
+                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "0", "0", "0");
 
             }
         });

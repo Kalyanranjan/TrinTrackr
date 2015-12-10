@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,6 +18,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class StudentMapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -36,7 +41,22 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private int mTest = 1000;
     private int count = 0;
     private Handler mHandler;
+
+    private String mSudentName;
     DriverTracker track = new DriverTracker();
+
+    /* Drivers on the road */
+    private int mNumDriver = 0;
+    private String[] mDrivers = new String[30];
+
+
+    public String toString(){
+        String string = "|";
+        for (int i=1; i<=mNumDriver; i++){
+            string+=this.mDrivers[3*i-3]+" | "+this.mDrivers[3*i-2]+" | "+this.mDrivers[3*i-1]+" | ";
+        }
+        return string;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +115,18 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStopShuttle.setEnabled(true);
                 mStartShuttle.setEnabled(false);
                 mMessage.setText(R.string.yes_shuttle);
+
+                final GetDrLocActivity getDriver = new GetDrLocActivity(StudentMapActivity.this);
+                getDriver.execute();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        mNumDriver = getDriver.getDrNum();
+                        mDrivers = getDriver.getDrivers();
+                        Toast.makeText(StudentMapActivity.this, getDriver.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StudentMapActivity.this, String.valueOf(mNumDriver), Toast.LENGTH_SHORT).show();
+                    }
+                }, 2000);
             }
         });
 
@@ -118,11 +150,14 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStudent.setDraggable(false);
                 mCancel.setEnabled(true);
                 mCall.setEnabled(false);
-                mMessage.setText(R.string.shuttle_called);
+                //mMessage.setText(R.string.shuttle_called);
+
+                Toast.makeText(StudentMapActivity.this, "Calling Shuttle", Toast.LENGTH_SHORT).show();
+                StudentRequestActivity sra = new StudentRequestActivity(StudentMapActivity.this);
+                sra.execute("pranav", "0", "0", "0");
+
             }
         });
-
-
 
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +165,11 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStudent.setDraggable(true);
                 mCall.setEnabled(true);
                 mCancel.setEnabled(false);
-                mMessage.setText(R.string.shuttle_cancel);
+                //mMessage.setText(R.string.shuttle_cancel);
+
+                Toast.makeText(StudentMapActivity.this, "Cancelling Shuttle", Toast.LENGTH_SHORT).show();
+                StudentRequestActivity sra = (StudentRequestActivity)new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "0", "0", "0");
+
             }
         });
 
