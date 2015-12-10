@@ -85,7 +85,7 @@ public class GetStLocActivity extends AsyncTask<String, Void, String> {
                     this.setStudents(x, temp1, temp2, temp3);
                 }
 
-                Toast.makeText(context, this.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, this.toString(), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(context, "Error parsing JSON data.", Toast.LENGTH_SHORT).show();

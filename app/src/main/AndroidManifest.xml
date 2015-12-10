@@ -50,7 +50,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".DriverTracker"
+            android:name=".DriverMapActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_driver_map"
             android:parentActivityName=".WelcomeScreenActivity"

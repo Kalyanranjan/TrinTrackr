@@ -27,6 +27,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private GoogleMap mMap;
     private LatLng trin = new LatLng(41.747270, -72.690354);
     private LatLng home = new LatLng(41.752264, -72.687111);
+
+    private double lati = 41.747270;
+    private double longi = 72.690354;
     private Marker mVehicle;
     private Button mPass1Button;
     private Button mPass2Button;
@@ -40,6 +43,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Marker mPassenger1;
     private Marker mPassenger2;
     private Marker mPassenger3;
+
+    private int mStRequested = 0;
 
     private int mInterval = 1000; // 1 seconds by default, can be changed later
     private int mTest = 1000;
@@ -78,8 +83,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void run() {
                 mNumStudent = getStudent.getStNum();
                 mStudents = getStudent.getStudents();
-                Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
             }
         }, 500);
 
@@ -146,7 +151,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
         mHandler = new Handler();
-//        startRepeatingTask();
+        startRepeatingTask();
     }
 
     /**
@@ -211,19 +216,42 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     Runnable mStatusChecker = new Runnable() {
         @Override
         public void run() {
-            LatLng pos = mVehicle.getPosition();
-            double x = pos.longitude;
-            double y = pos.latitude;
-            x = x + 0.001;
 
+            final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
+            getStudent.execute();
+            //Toast.makeText(DriverMapActivity.this, "hola", Toast.LENGTH_SHORT).show();
+            Handler mHandler2 = new Handler();
+            mHandler2.postDelayed(new Runnable() {
+                public void run() {
+                    mNumStudent = getStudent.getStNum();
+                    mStudents = getStudent.getStudents();
+                    MarkerOptions mOptions = new MarkerOptions().position(home).title("Shuttle");
+                   // mPassenger1 = mMap.addMarker(mOptions);
 
-            mVehicle.remove();
-            MarkerOptions mar = new MarkerOptions()
-                    .position(new LatLng(y, x))
-                    .title("This is my title")
-                    .snippet("and snippet")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-            mVehicle = mMap.addMarker(mar);
+                    if (mNumStudent > 0) {
+                        if (mStRequested == 0) {
+                            mPassenger1 = mMap.addMarker(mOptions);
+                            mStRequested = 1;
+                        }
+                        lati = Double.parseDouble(mStudents[1]);
+                        longi = Double.parseDouble(mStudents[2]);
+                        mPassenger1.setPosition(new LatLng(lati, longi));
+                    } else {
+                        if (mStRequested == 1) {
+                            mPassenger1.remove();
+                            mStRequested = 0;
+                        }
+                    }
+
+                    //Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
+                }
+            }, 500);
+
+            //getDriver.cancel(true);
+
+            //mStudent.setPosition(new LatLng(lati, longi));
+            //mShuttle.setPosition(new LatLng(lati, -longi));
 
 
             mHandler.postDelayed(mStatusChecker, mInterval);
@@ -232,5 +260,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     void startRepeatingTask() {
         mStatusChecker.run();
+    }
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
     }
 }
