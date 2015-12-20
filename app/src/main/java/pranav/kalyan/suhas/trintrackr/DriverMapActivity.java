@@ -1,6 +1,12 @@
 package pranav.kalyan.suhas.trintrackr;
 
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     // Broad Street other end location = 41.745589, -72.687198
     // Good step for longitude (2nd value) will be -0.000043 per second
@@ -31,12 +37,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Button mPass1Button;
     private Button mPass2Button;
     private Button mPass3Button;
-
+    private LocationManager locationManager;
     private Button mShuttleStart;
     private Button mShuttleStop;
     private boolean mShuttleStarted;
     private boolean pass1check, pass2check, pass3check;
-
+    private int count;
     private Marker mPassenger1;
     private Marker mPassenger2;
     private Marker mPassenger3;
@@ -71,6 +77,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
         getStudent.execute();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                2000, 1, this);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -229,5 +239,45 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     void startRepeatingTask() {
         mStatusChecker.run();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        String msg = "New Latitude: " + location.getLatitude()
+                + "New Longitude: " + location.getLongitude();
+
+        MarkerOptions mar = new MarkerOptions()
+                .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                .title("This is my title")
+                .snippet("and snippet")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+        mVehicle.remove();
+        mVehicle = mMap.addMarker(mar);
+
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+        Toast.makeText(getBaseContext(), "Gps is turned off!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+        Toast.makeText(getBaseContext(), "Gps is turned on!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
     }
 }
