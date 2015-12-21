@@ -18,24 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingBottom="40px"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/student_message_board"
-            android:textAlignment="center"
-            android:textSize="30sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
         >
         <Button
             android:id="@+id/student_call_shuttle"
@@ -52,4 +34,5 @@
             android:layout_weight="1"/>
 
     </LinearLayout>
+
 </LinearLayout>

@@ -79,8 +79,6 @@ public class StudentRequestActivity extends AsyncTask<String,Void,String> {
         data += "&lat=" + driverLat;
         data += "&lng=" + driverLng;
 
-        //Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
-
         try {
             link = "http://157.252.190.180/trintrackr/changeStudentStatus.php"+data;
             URL url = new URL(link);
@@ -96,7 +94,6 @@ public class StudentRequestActivity extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result){
-        //Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
 
         if (result != null) {
             try {
@@ -104,18 +101,10 @@ public class StudentRequestActivity extends AsyncTask<String,Void,String> {
                 String message = "Requested:"+ jsonObj.getString("Active")+" Lat:"+jsonObj.getString("lat")+" Lng:"+jsonObj.getString("lng");
 
                 /*NOT REQUIRED NOW - USED FOR TESTING */
-                //this.setRetStdStatus(Integer.parseInt(jsonObj.getString("Active")));
-                //this.setRetLat(Integer.parseInt(jsonObj.getString("lat")));
-                //this.setRetLng(Integer.parseInt(jsonObj.getString("lng")));
-
-                //String message = "hell"+"no";
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(context, "Error parsing JSON data.", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(context, "Couldn't get any JSON data.", Toast.LENGTH_SHORT).show();
         }
     }
 

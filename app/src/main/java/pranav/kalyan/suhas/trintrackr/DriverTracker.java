@@ -216,11 +216,6 @@ public class DriverTracker extends FragmentActivity implements
     Runnable mStatusChecker = new Runnable() {
         @Override
         public void run() {
-
-
-
-
-
             mHandler.postDelayed(mStatusChecker, mInterval);
         }
     };

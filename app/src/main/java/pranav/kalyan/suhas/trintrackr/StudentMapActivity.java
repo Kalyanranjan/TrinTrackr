@@ -15,14 +15,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 
 public class StudentMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
@@ -35,12 +31,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private Marker mStudent;
     private Marker mShuttle;
     private int mShuttleStarted = 0;
-    private Button mStartShuttle;
-    private Button mStopShuttle;
-    private TextView mMessage;
     private int mInterval = 1000; // 1 seconds by default, can be changed later
-    private int mTest = 1000;
-    private int count = 0;
     private Handler mHandler;
     private double final_lat = 0.0;
     private double final_lon = 0.0;
@@ -50,8 +41,6 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
 
     private String mSudentName;
     DriverTracker track = new DriverTracker();
-
-    //private final GetDrLocActivity getDriver = new GetDrLocActivity(StudentMapActivity.this);
 
     /* Drivers on the road */
     private int mNumDriver = 0;
@@ -76,12 +65,6 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.studentMap);
         mapFragment.getMapAsync(this);
-
-        mMessage = (TextView) findViewById(R.id.student_message_board);
-
-        mMessage.setText(R.string.no_shuttle);
-
-
     }
 
 
@@ -109,7 +92,9 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
 
 
         mCall = (Button) findViewById(R.id.student_call_shuttle);
+        mCall.setEnabled(false);
         mCancel = (Button) findViewById(R.id.student_cancel_shuttle);
+        mCancel.setEnabled(false);
 
         mCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +102,6 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStudent.setDraggable(false);
                 mCancel.setEnabled(true);
                 mCall.setEnabled(false);
-                //mMessage.setText(R.string.shuttle_called);
 
                 String x = Double.toString(final_lat);
                 String y = Double.toString(final_lon);
@@ -134,9 +118,8 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mStudent.setDraggable(true);
                 mCall.setEnabled(true);
                 mCancel.setEnabled(false);
-                //mMessage.setText(R.string.shuttle_cancel);
 
-                Toast.makeText(StudentMapActivity.this, "Cancelling Shuttle", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StudentMapActivity.this, "Cancelling or Boarding Shuttle", Toast.LENGTH_SHORT).show();
                 StudentRequestActivity sra = (StudentRequestActivity)new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "0", "0", "0");
 
             }
@@ -156,8 +139,18 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         mHandler2.postDelayed(new Runnable() {
             public void run() {
                 mNumDriver = getDriver.getDrNum();
+                if (mNumDriver > 0) {
+                    if (mShuttleStarted == 0) {
+                        mShuttleStarted = 1;
+                        mCall.setEnabled(true);
+                    }
+                } else {
+                    mCall.setEnabled(false);
+                    mCancel.setEnabled(false);
+                }
                 mDrivers = getDriver.getDrivers();
-                MarkerOptions mOptions = new MarkerOptions().position(home).title("Shuttle");
+                MarkerOptions mOptions = new MarkerOptions().position(home).title("Shuttle")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));;
                 for (int i=0; i<5; i++) {
                     if (mMarkerTracker[i]) {
                         mVehicles[i].remove();
@@ -173,26 +166,9 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                         longi = Double.parseDouble(mDrivers[3*i+2]);
                         mVehicles[i].setPosition(new LatLng(lati, longi));
                     }
-//                        else {
-//                            if (i < prevNumPassengers) {
-//                                mPassengers[i].remove();
-//                                Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
                 }
-
-                //Toast.makeText(StudentMapActivity.this, getDriver.toString(), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(StudentMapActivity.this, String.valueOf(mNumDriver), Toast.LENGTH_SHORT).show();
             }
         }, 500);
-
-        //getDriver.cancel(true);
-
-        //mStudent.setPosition(new LatLng(lati, longi));
-        //mShuttle.setPosition(new LatLng(lati, -longi));
-
-
-        mMessage.setText(String.valueOf(lati));
         mHandler.postDelayed(mStatusChecker, mInterval);
     }
   };
@@ -219,7 +195,5 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-
-
     }
 }

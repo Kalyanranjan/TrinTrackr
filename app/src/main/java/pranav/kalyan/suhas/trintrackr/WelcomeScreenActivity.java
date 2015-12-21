@@ -17,8 +17,6 @@ import java.util.HashMap;
 
 public class WelcomeScreenActivity extends AppCompatActivity {
 
-    private static final String USERNAMEPASSER = "username goes here";
-
     private Button mLoginAsDriverButton;
     private Button mLoginAsStudentButton;
 
@@ -119,7 +117,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 String duser = ((EditText) findViewById(R.id.driver_username)).getText().toString();
                 String dpass = ((EditText) findViewById(R.id.driver_passcode)).getText().toString();
 
-                if (duser.equals("kal") && dpass.equals("yan")) {
+                if (duser.equals("kalyan") && dpass.equals("parajuli")) {
                     findViewById(R.id.loginDriver).setVisibility(LinearLayout.GONE);
                     findViewById(R.id.loginSelect).setVisibility(LinearLayout.VISIBLE);
 

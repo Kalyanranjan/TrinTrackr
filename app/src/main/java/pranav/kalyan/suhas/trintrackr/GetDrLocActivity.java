@@ -69,7 +69,6 @@ public class GetDrLocActivity extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result){
-        //Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
 
         if (result != null) {
             try {
@@ -85,13 +84,10 @@ public class GetDrLocActivity extends AsyncTask<String, Void, String> {
                     this.setStudents(x, temp1, temp2, temp3);
                 }
 
-                //Toast.makeText(context, temp1, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(context, "Error parsing JSON data.", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(context, "Couldn't get any JSON data.", Toast.LENGTH_SHORT).show();
         }
     }
 

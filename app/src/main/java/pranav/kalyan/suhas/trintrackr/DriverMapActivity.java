@@ -122,7 +122,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                 Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
                 new DriverRequestActivity(DriverMapActivity.this).execute("kalyan", "0", "0", "0");
-
             }
         });
 
@@ -159,7 +158,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
             final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
             getStudent.execute();
-            //Toast.makeText(DriverMapActivity.this, "hola", Toast.LENGTH_SHORT).show();
             Handler mHandler2 = new Handler();
             mHandler2.postDelayed(new Runnable() {
                 public void run() {
@@ -183,39 +181,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             longi = Double.parseDouble(mStudents[3*i+2]);
                             mPassengers[i].setPosition(new LatLng(lati, longi));
                         }
-//                        else {
-//                            if (i < prevNumPassengers) {
-//                                mPassengers[i].remove();
-//                                Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
                     }
-
-//                    prevNumPassengers = mNumStudent;
-
-//                    if (mNumStudent > 0) {
-//                            mPassenger1 = mMap.addMarker(mOptions);
-////                            mStRequested = 1;
-//                        lati = Double.parseDouble(mStudents[1]);
-//                        longi = Double.parseDouble(mStudents[2]);
-//                        mPassenger1.setPosition(new LatLng(lati, longi));
-//                    } else {
-////                        if (mStRequested == 1) {
-//                            mPassenger1.remove();
-////                            mStRequested = 0;
-//                        }
-//                    }
-
-                    //Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
                 }
             }, 500);
-
-            //getDriver.cancel(true);
-
-            //mStudent.setPosition(new LatLng(lati, longi));
-            //mShuttle.setPosition(new LatLng(lati, -longi));
-
 
             mHandler.postDelayed(mStatusChecker, mInterval);
         }
@@ -247,7 +215,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             new DriverRequestActivity(DriverMapActivity.this).execute("kalyan", "1",
                         String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
 
-        //Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -261,15 +228,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onProviderEnabled(String provider) {
-
         Toast.makeText(getBaseContext(), "Gps is turned on!! ",
                 Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
+     }
 
 }

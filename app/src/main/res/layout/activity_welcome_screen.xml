@@ -63,19 +63,29 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:text="Login as Student"
+                    android:text="Login as Driver"
 
-                    android:id="@+id/studentLoginButton"
-                    />
+                    android:id="@+id/driverLoginButton"/>
 
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:text="Login as Driver"
+                    android:text="Login as Student"
 
-                    android:id="@+id/driverLoginButton"/>
+                    android:id="@+id/studentLoginButton"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sign Up As Student"
+                    android:textSize="24sp"
+                    android:textAlignment="center"
+
+                    android:id="@+id/signupText"/>
+            </LinearLayout>
 
             </LinearLayout>
 
@@ -203,15 +213,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign Up"
-                android:textSize="30sp"
-                android:textAlignment="center"
-
-                android:id="@+id/signupText"/>
-        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

@@ -19,38 +19,20 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingBottom="40px">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/driver_message_board"
-            android:text="Messages or Alerts for the Driver!!"
-            android:textAlignment="center"
-            android:textSize="30sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_weight="1">
 
         <Button
             android:id="@+id/driver_start_shuttle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/start_shuttle"
+            android:text="START SHUTTLE"
             android:layout_weight="1"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/driver_stop_shuttle"
-            android:text="@string/cancel_shuttle"
+            android:text="STOP SHUTTLE"
             android:layout_weight="1"/>
 
     </LinearLayout>
