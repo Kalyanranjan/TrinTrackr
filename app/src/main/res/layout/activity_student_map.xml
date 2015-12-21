@@ -52,27 +52,4 @@
             android:layout_weight="1"/>
 
     </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        >
-        <Button
-            android:id="@+id/student_start_shuttle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DEMO: Start Shuttle"
-            android:layout_weight="1"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/student_stop_shuttle"
-            android:text="DEMO: Stop Shuttle"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
 </LinearLayout>

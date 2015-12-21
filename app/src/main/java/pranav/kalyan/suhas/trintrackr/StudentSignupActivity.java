@@ -30,7 +30,7 @@ public class StudentSignupActivity extends AppCompatActivity implements View.OnC
 
     private Button buttonRegister;
 
-    private static final String REGISTER_URL = "http://suhas.netau.net/signup.php";
+    private static final String REGISTER_URL = "http://157.252.190.180/trintrackr/signup.php";
 
 
     @Override
@@ -105,7 +105,9 @@ public class StudentSignupActivity extends AppCompatActivity implements View.OnC
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Signed Up Successfully!",Toast.LENGTH_LONG).show();
+                Intent i = new Intent(StudentSignupActivity.this, WelcomeScreenActivity.class);
+                startActivity(i);
             }
 
             @Override

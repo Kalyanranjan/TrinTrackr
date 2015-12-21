@@ -1,6 +1,12 @@
 package pranav.kalyan.suhas.trintrackr;
 
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback , LocationListener{
 
     // Broad Street other end location = 41.745589, -72.687198
     // Good step for longitude (2nd value) will be -0.000043 per second
@@ -26,29 +32,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private GoogleMap mMap;
     private LatLng trin = new LatLng(41.747270, -72.690354);
-    private LatLng home = new LatLng(41.752264, -72.687111);
+    private LatLng home = new LatLng(41.744433, -72.69118110);
 
     private double lati = 41.747270;
     private double longi = 72.690354;
     private Marker mVehicle;
-    private Button mPass1Button;
-    private Button mPass2Button;
-    private Button mPass3Button;
 
     private Button mShuttleStart;
     private Button mShuttleStop;
     private boolean mShuttleStarted;
-    private boolean pass1check, pass2check, pass3check;
-
     private Marker mPassenger1;
-    private Marker mPassenger2;
-    private Marker mPassenger3;
-
-    private int mStRequested = 0;
 
     private int mInterval = 1000; // 1 seconds by default, can be changed later
     private int mTest = 1000;
     private Handler mHandler;
+    private LocationManager locationManager;
 
 
     private Handler mHandler2 = new Handler();
@@ -58,7 +56,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     /* Students on the road */
     private int mNumStudent = 0;
-    private String[] mStudents = new String[255];
+    private int prevNumPassengers = 0;
+    private boolean[] mMarkerTracker = {false, false, false, false, false, false, false, false, false, false};
+    //private boolean[] mMarkerTracker2 = {false, false, false, false, false, false, false, false, false, false};
+    private Marker[] mPassengers = new Marker[10];
+    private String[] mStudents = new String[30];
 
     public String toString(){
         String string = "|";
@@ -77,6 +79,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.driverMap);
         mapFragment.getMapAsync(this);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, this);
 
         getStudent.execute();
         mHandler2.postDelayed(new Runnable() {
@@ -88,55 +93,27 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         }, 500);
 
-
-        mPass1Button = (Button) findViewById(R.id.passenger1);
-        mPass2Button = (Button) findViewById(R.id.passenger2);
-        mPass3Button = (Button) findViewById(R.id.passenger3);
         mShuttleStart = (Button) findViewById(R.id.driver_start_shuttle);
         mShuttleStop = (Button) findViewById(R.id.driver_stop_shuttle);
 
         mShuttleStarted = false;
-        mPass1Button.setEnabled(false);
-        mPass2Button.setEnabled(false);
-        mPass3Button.setEnabled(false);
-        mShuttleStop.setEnabled(false);
-        mShuttleStart.setEnabled(true);
-        pass2check = false;
-        pass1check = false;
-        pass3check = false;
-
 
         mShuttleStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mShuttleStarted = true;
-                mPass1Button.setEnabled(true);
-                mPass2Button.setEnabled(true);
-                mPass3Button.setEnabled(true);
                 mShuttleStop.setEnabled(true);
                 mShuttleStart.setEnabled(false);
+                mShuttleStarted = true;
 
                 Toast.makeText(DriverMapActivity.this, "Starting Shuttle", Toast.LENGTH_SHORT).show();
-                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "1", "10", "20");
-
+                new DriverRequestActivity(DriverMapActivity.this).execute("kalyan", "1", "41.744433", "-72.69118110");
             }
         });
 
         mShuttleStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pass1check) {
-                    mPassenger1.remove();
-                }
-                if (pass2check) {
-                    mPassenger2.remove();
-                }
-                if (pass3check){
-                    mPassenger3.remove();
-                }
-                mPass1Button.setEnabled(false);
-                mPass2Button.setEnabled(false);
-                mPass3Button.setEnabled(false);
                 mShuttleStop.setEnabled(false);
                 mShuttleStart.setEnabled(true);
 
@@ -144,7 +121,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
                 Toast.makeText(DriverMapActivity.this, "Stopping Shuttle", Toast.LENGTH_SHORT).show();
-                new DriverRequestActivity(DriverMapActivity.this).execute("suhas", "0", "0", "0");
+                new DriverRequestActivity(DriverMapActivity.this).execute("kalyan", "0", "0", "0");
 
             }
         });
@@ -169,53 +146,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(trin, 16));
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
         mMap.animateCamera(zoom);
-        MarkerOptions mOptions = new MarkerOptions().position(home).title("Where do you want the shuttle?");
+        MarkerOptions mOptions = new MarkerOptions().position(home).title("This is my title")
+                .snippet("and snippet")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         mVehicle = mMap.addMarker(mOptions);
-        mVehicle.setDraggable(true);
-
-        mPass1Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MarkerOptions mar = new MarkerOptions()
-                        .position(new LatLng(41.747977, -72.693216))
-                        .title("This is my title")
-                        .snippet("and snippet")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                mPassenger1 = mMap.addMarker(mar);
-                pass1check = true;
-            }
-        });
-
-        mPass2Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MarkerOptions mar = new MarkerOptions()
-                        .position(new LatLng(41.751824, -72.687094))
-                        .title("This is my title")
-                        .snippet("and snippet")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                mPassenger2 = mMap.addMarker(mar);
-                pass2check = true;
-            }
-        });
-
-        mPass3Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MarkerOptions mar = new MarkerOptions()
-                        .position(new LatLng(41.747056, -72.687155))
-                        .title("This is my title")
-                        .snippet("and snippet")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                mPassenger3 = mMap.addMarker(mar);
-                pass3check = true;
-            }
-        });
     }
 
     Runnable mStatusChecker = new Runnable() {
         @Override
         public void run() {
+
 
             final GetStLocActivity getStudent = new GetStLocActivity(DriverMapActivity.this);
             getStudent.execute();
@@ -223,25 +163,48 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             Handler mHandler2 = new Handler();
             mHandler2.postDelayed(new Runnable() {
                 public void run() {
+
                     mNumStudent = getStudent.getStNum();
                     mStudents = getStudent.getStudents();
-                    MarkerOptions mOptions = new MarkerOptions().position(home).title("Shuttle");
-                   // mPassenger1 = mMap.addMarker(mOptions);
+                    MarkerOptions mOptions = new MarkerOptions().position(home).title("Student");
 
-                    if (mNumStudent > 0) {
-                        if (mStRequested == 0) {
-                            mPassenger1 = mMap.addMarker(mOptions);
-                            mStRequested = 1;
-                        }
-                        lati = Double.parseDouble(mStudents[1]);
-                        longi = Double.parseDouble(mStudents[2]);
-                        mPassenger1.setPosition(new LatLng(lati, longi));
-                    } else {
-                        if (mStRequested == 1) {
-                            mPassenger1.remove();
-                            mStRequested = 0;
+                    for (int i=0; i<10; i++) {
+                        if (mMarkerTracker[i]) {
+                            mPassengers[i].remove();
+                            mMarkerTracker[i] = false;
                         }
                     }
+
+                    for (int i=0; i<10; i++) {
+                        if ( i < mNumStudent){
+                            mPassengers[i] = mMap.addMarker(mOptions);
+                            mMarkerTracker[i] = true;
+                            lati = Double.parseDouble(mStudents[3 * i + 1]);
+                            longi = Double.parseDouble(mStudents[3*i+2]);
+                            mPassengers[i].setPosition(new LatLng(lati, longi));
+                        }
+//                        else {
+//                            if (i < prevNumPassengers) {
+//                                mPassengers[i].remove();
+//                                Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+                    }
+
+//                    prevNumPassengers = mNumStudent;
+
+//                    if (mNumStudent > 0) {
+//                            mPassenger1 = mMap.addMarker(mOptions);
+////                            mStRequested = 1;
+//                        lati = Double.parseDouble(mStudents[1]);
+//                        longi = Double.parseDouble(mStudents[2]);
+//                        mPassenger1.setPosition(new LatLng(lati, longi));
+//                    } else {
+////                        if (mStRequested == 1) {
+//                            mPassenger1.remove();
+////                            mStRequested = 0;
+//                        }
+//                    }
 
                     //Toast.makeText(DriverMapActivity.this, getStudent.toString(), Toast.LENGTH_SHORT).show();
                     //Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
@@ -265,4 +228,48 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     void stopRepeatingTask() {
         mHandler.removeCallbacks(mStatusChecker);
     }
+    @Override
+    public void onLocationChanged(Location location) {
+
+        String msg = "New Latitude: " + location.getLatitude()
+                + "New Longitude: " + location.getLongitude();
+
+        MarkerOptions mar = new MarkerOptions()
+                .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                .title("This is my title")
+                .snippet("and snippet")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+        mVehicle.remove();
+        mVehicle = mMap.addMarker(mar);
+
+        if (mShuttleStarted)
+            new DriverRequestActivity(DriverMapActivity.this).execute("kalyan", "1",
+                        String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+
+        //Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+        Toast.makeText(getBaseContext(), "Gps is turned off!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+        Toast.makeText(getBaseContext(), "Gps is turned on!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

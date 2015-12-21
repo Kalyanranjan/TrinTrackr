@@ -40,37 +40,6 @@
         android:layout_weight="1">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/passenger1"
-            android:text="DEMO: passenger1"
-            android:layout_weight="1"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/passenger2"
-            android:text="DEMO: passenger2"
-            android:layout_weight="1"/>
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/passenger3"
-            android:text="DEMO: passenger3"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <Button
             android:id="@+id/driver_start_shuttle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

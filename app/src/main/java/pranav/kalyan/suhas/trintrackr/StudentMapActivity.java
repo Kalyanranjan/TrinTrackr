@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 
-public class StudentMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class StudentMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap mMap;
     private double lati = 41.747270;
@@ -38,10 +38,15 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
     private Button mStartShuttle;
     private Button mStopShuttle;
     private TextView mMessage;
-    private int mInterval = 3000; // 1 seconds by default, can be changed later
+    private int mInterval = 1000; // 1 seconds by default, can be changed later
     private int mTest = 1000;
     private int count = 0;
     private Handler mHandler;
+    private double final_lat = 0.0;
+    private double final_lon = 0.0;
+    private LatLng final_pos;
+
+
 
     private String mSudentName;
     DriverTracker track = new DriverTracker();
@@ -50,7 +55,9 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
 
     /* Drivers on the road */
     private int mNumDriver = 0;
-    private String[] mDrivers = new String[30];
+    private boolean[] mMarkerTracker = {false, false, false, false, false};
+    private Marker[] mVehicles = new Marker[5];
+    private String[] mDrivers = new String[15];
 
 
     public String toString(){
@@ -98,43 +105,11 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
         mStudent.setDraggable(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
         mMap.setMyLocationEnabled(true);
+        mMap.setOnMarkerDragListener(this);
 
 
         mCall = (Button) findViewById(R.id.student_call_shuttle);
-        mCall.setEnabled(false);
         mCancel = (Button) findViewById(R.id.student_cancel_shuttle);
-        mCancel.setEnabled(false);
-        mStartShuttle = (Button) findViewById(R.id.student_start_shuttle);
-        mStopShuttle = (Button) findViewById(R.id.student_stop_shuttle);
-        mStopShuttle.setEnabled(false);
-
-        mStartShuttle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mStudent.setDraggable(true);
-                mCancel.setEnabled(false);
-                mCall.setEnabled(true);
-                mStopShuttle.setEnabled(true);
-                mStartShuttle.setEnabled(false);
-                mMessage.setText(R.string.yes_shuttle);
-
-
-            }
-        });
-
-
-        mStopShuttle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mStudent.setDraggable(true);
-                mCancel.setEnabled(false);
-                mCall.setEnabled(false);
-                mStartShuttle.setEnabled(true);
-                mStopShuttle.setEnabled(false);
-                mMessage.setText(R.string.no_shuttle);
-            }
-        });
-
 
         mCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,9 +119,8 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mCall.setEnabled(false);
                 //mMessage.setText(R.string.shuttle_called);
 
-                LatLng stud = mStudent.getPosition();
-                String x = Double.toString(stud.latitude);
-                String y = Double.toString(stud.longitude);
+                String x = Double.toString(final_lat);
+                String y = Double.toString(final_lon);
 
                 Toast.makeText(StudentMapActivity.this, "Calling Shuttle", Toast.LENGTH_SHORT).show();
                 new StudentRequestActivity(StudentMapActivity.this).execute("pranav", "1", x, y);
@@ -184,21 +158,29 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                 mNumDriver = getDriver.getDrNum();
                 mDrivers = getDriver.getDrivers();
                 MarkerOptions mOptions = new MarkerOptions().position(home).title("Shuttle");
-                if (mNumDriver > 0) {
-                    if (mShuttleStarted == 0) {
-                        mShuttle = mMap.addMarker(mOptions);
-                        mShuttleStarted = 1;
-                    }
-
-                    lati = Double.parseDouble(mDrivers[1]);
-                    longi = Double.parseDouble(mDrivers[2]);
-                } else {
-                    if (mShuttleStarted == 1) {
-                        mShuttle.remove();
-                        mShuttleStarted = 0;
+                for (int i=0; i<5; i++) {
+                    if (mMarkerTracker[i]) {
+                        mVehicles[i].remove();
+                        mMarkerTracker[i] = false;
                     }
                 }
-                mShuttle.setPosition(new LatLng(lati, longi));
+
+                for (int i=0; i<5; i++) {
+                    if ( i < mNumDriver){
+                        mVehicles[i] = mMap.addMarker(mOptions);
+                        mMarkerTracker[i] = true;
+                        lati = Double.parseDouble(mDrivers[3 * i + 1]);
+                        longi = Double.parseDouble(mDrivers[3*i+2]);
+                        mVehicles[i].setPosition(new LatLng(lati, longi));
+                    }
+//                        else {
+//                            if (i < prevNumPassengers) {
+//                                mPassengers[i].remove();
+//                                Toast.makeText(DriverMapActivity.this, String.valueOf(mNumStudent), Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+                }
+
                 //Toast.makeText(StudentMapActivity.this, getDriver.toString(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(StudentMapActivity.this, String.valueOf(mNumDriver), Toast.LENGTH_SHORT).show();
             }
@@ -220,6 +202,24 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
   }
 
   void stopRepeatingTask() {
-    mHandler.removeCallbacks(mStatusChecker);
+      mHandler.removeCallbacks(mStatusChecker);
   }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        final_pos = marker.getPosition();
+        final_lat = final_pos.latitude;
+        final_lon = final_pos.longitude;
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+
+    }
 }

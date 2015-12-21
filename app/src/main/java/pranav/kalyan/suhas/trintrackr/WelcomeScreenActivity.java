@@ -17,6 +17,8 @@ import java.util.HashMap;
 
 public class WelcomeScreenActivity extends AppCompatActivity {
 
+    private static final String USERNAMEPASSER = "username goes here";
+
     private Button mLoginAsDriverButton;
     private Button mLoginAsStudentButton;
 
@@ -32,7 +34,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
     public static final String PASSWORD = "PASSWORD";
 
-    private static final String LOGIN_URL = "http://suhas.netau.net/login.php";
+    private static final String LOGIN_URL = "http://157.252.190.180/trintrackr/login.php";
 
     private EditText editTextUserName;
     private EditText editTextPassword;
@@ -51,6 +53,8 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 findViewById(R.id.loginSelect).setVisibility(LinearLayout.GONE);
                 findViewById(R.id.loginDriver).setVisibility(LinearLayout.VISIBLE);
+                ((EditText) findViewById(R.id.driver_username)).setText("");
+                ((EditText) findViewById(R.id.driver_passcode)).setText("");
             }
         });
 
@@ -60,6 +64,9 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 findViewById(R.id.loginSelect).setVisibility(LinearLayout.GONE);
                 findViewById(R.id.loginStudent).setVisibility(LinearLayout.VISIBLE);
+
+                ((EditText) findViewById(R.id.student_username)).setText("");
+                ((EditText) findViewById(R.id.student_passcode)).setText("");
             }
         });
 
@@ -70,6 +77,9 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 findViewById(R.id.loginDriver).setVisibility(LinearLayout.GONE);
                 findViewById(R.id.loginSelect).setVisibility(LinearLayout.VISIBLE);
+                ((EditText) findViewById(R.id.driver_username)).setText("");
+                ((EditText) findViewById(R.id.driver_passcode)).setText("");
+
                 ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
                 ((TextView) findViewById(R.id.studentLoginMessage)).setText("");
             }
@@ -82,7 +92,10 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 findViewById(R.id.loginStudent).setVisibility(LinearLayout.GONE);
                 findViewById(R.id.loginSelect).setVisibility(LinearLayout.VISIBLE);
                 ((TextView) findViewById(R.id.studentLoginMessage)).setText("");
-                ((TextView) findViewById(R.id.studentLoginMessage)).setText("");
+                ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
+
+                ((EditText) findViewById(R.id.student_username)).setText("");
+                ((EditText) findViewById(R.id.student_passcode)).setText("");
             }
         });
 
@@ -106,8 +119,19 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 String duser = ((EditText) findViewById(R.id.driver_username)).getText().toString();
                 String dpass = ((EditText) findViewById(R.id.driver_passcode)).getText().toString();
 
-                if (duser.equals("driver") && dpass.equals("driver")) {
+                if (duser.equals("kal") && dpass.equals("yan")) {
+                    findViewById(R.id.loginDriver).setVisibility(LinearLayout.GONE);
+                    findViewById(R.id.loginSelect).setVisibility(LinearLayout.VISIBLE);
+
+                    ((TextView) findViewById(R.id.studentLoginMessage)).setText("");
                     ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
+
+                    ((EditText) findViewById(R.id.driver_username)).setText("");
+                    ((EditText) findViewById(R.id.driver_passcode)).setText("");
+
+                    ((EditText) findViewById(R.id.student_username)).setText("");
+                    ((EditText) findViewById(R.id.student_passcode)).setText("");
+
                     Intent i = new Intent(WelcomeScreenActivity.this, DriverMapActivity.class);
                     startActivity(i);
                 } else {
@@ -120,9 +144,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         mSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent i = new Intent(WelcomeScreenActivity.this, StudentSignupActivity.class);
-             
                 startActivity(i);
             }
         });
@@ -171,7 +193,19 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 super.onPostExecute(s);
                 loading.dismiss();
                 if(s.equalsIgnoreCase("success")){
+                    findViewById(R.id.loginStudent).setVisibility(LinearLayout.GONE);
+                    findViewById(R.id.loginSelect).setVisibility(LinearLayout.VISIBLE);
+
                     ((TextView) findViewById(R.id.studentLoginMessage)).setText("");
+                    ((TextView) findViewById(R.id.driverLoginMessage)).setText("");
+
+                    ((EditText) findViewById(R.id.driver_username)).setText("");
+                    ((EditText) findViewById(R.id.driver_passcode)).setText("");
+
+                    ((EditText) findViewById(R.id.student_username)).setText("");
+                    ((EditText) findViewById(R.id.student_passcode)).setText("");
+
+
                     Intent intent = new Intent(WelcomeScreenActivity.this,StudentMapActivity.class);
                     startActivity(intent);
                 }else{
