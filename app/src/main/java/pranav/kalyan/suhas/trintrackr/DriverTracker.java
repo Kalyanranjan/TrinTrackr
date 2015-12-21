@@ -48,6 +48,7 @@ public class DriverTracker extends FragmentActivity implements
     Marker mShuttle;
     private Handler mHandler;
     private int mInterval = 1000; // 1 seconds by default, can be changed later
+    private int count = 0;
 
 
 
@@ -67,7 +68,7 @@ public class DriverTracker extends FragmentActivity implements
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setInterval(1 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
         mHandler = new Handler();
@@ -147,9 +148,11 @@ public class DriverTracker extends FragmentActivity implements
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
-        message.setText(String.valueOf(currentLatitude) + "    " + String.valueOf(currentLongitude));
+        message.setText(String.valueOf(currentLatitude) + "    " + String.valueOf(currentLongitude) + "   " + String.valueOf(count));
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+
+        count++;
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
         options = new MarkerOptions()
@@ -208,8 +211,6 @@ public class DriverTracker extends FragmentActivity implements
     public void onLocationChanged(Location location) {
         mShuttle.remove();
         handleNewLocation(location);
-        double cur = location.getLatitude();
-        message.setText(String.valueOf(cur));
 
     }
 
