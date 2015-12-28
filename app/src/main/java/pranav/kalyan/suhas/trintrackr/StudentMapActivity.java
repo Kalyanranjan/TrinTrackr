@@ -145,6 +145,7 @@ public class StudentMapActivity extends FragmentActivity implements OnMapReadyCa
                         mCall.setEnabled(true);
                     }
                 } else {
+                    mShuttleStarted = 0;
                     mCall.setEnabled(false);
                     mCancel.setEnabled(false);
                 }

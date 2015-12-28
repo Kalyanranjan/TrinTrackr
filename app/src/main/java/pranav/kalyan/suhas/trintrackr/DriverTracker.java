@@ -148,7 +148,7 @@ public class DriverTracker extends FragmentActivity implements
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
 
-        message.setText(String.valueOf(currentLatitude) + "    " + String.valueOf(currentLongitude) + "   " + String.valueOf(count));
+        //message.setText(String.valueOf(currentLatitude) + "    " + String.valueOf(currentLongitude) + "   " + String.valueOf(count));
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
