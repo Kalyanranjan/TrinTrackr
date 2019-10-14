@@ -1,0 +1,4 @@
+Specification of the development environment used is reqired. Please, update it.
+
+Java JDK= ?
+Android Studio = ?
